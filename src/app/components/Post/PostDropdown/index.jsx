@@ -31,6 +31,7 @@ export default function PostDropdown(props) {
     isRemoved,
     isApproved,
     isSpam,
+    isSpoiler,
     approvedBy,
     removedBy,
     showModModal,
@@ -58,6 +59,7 @@ export default function PostDropdown(props) {
         isRemoved={ isRemoved }
         isApproved={ isApproved }
         isSpam={ isSpam }
+        isSpoiler={ isSpoiler }
         approvedBy={ approvedBy }
         removedBy={ removedBy }
       >
@@ -90,6 +92,7 @@ PostDropdown.propTypes = {
   isRemoved: T.bool,
   isApproved: T.bool,
   isSpam: T.bool,
+  isSpoiler: T.bool,
   approvedBy: T.string,
   removedBy: T.string,
   modModalId: T.string,

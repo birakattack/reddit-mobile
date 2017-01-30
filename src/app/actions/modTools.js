@@ -12,6 +12,8 @@ export const MODTOOLS_REMOVAL_SUCCESS = 'MODTOOLS_REMOVAL_SUCCESS';
 export const MODTOOLS_APPROVAL_PENDING = 'MODTOOLS_APPROVAL_PENDING';
 export const MODTOOLS_APPROVAL_ERROR = 'MODTOOLS_APPROVAL_ERROR';
 export const MODTOOLS_APPROVAL_SUCCESS = 'MODTOOLS_APPROVAL_SUCCESS';
+export const MODTOOLS_TOGGLE_SPOILER_SUCCESS = 'MODTOOLS_TOGGLE_SPOILER_SUCCESS';
+export const MODTOOLS_TOGGLE_SPOILER_FAILURE = 'MODTOOLS_TOGGLE_SPOILER_FAILURE';
 export const FETCHING_MODERATING_SUBREDDITS = 'FETCHING_MODERATING_SUBREDDITS';
 export const RECEIVED_MODERATING_SUBREDDITS = 'RECEIVED_MODERATING_SUBREDDITS';
 export const FETCH_FAILED_MODERATING_SUBREDDITS = 'FETCH_FAILED_MODERATING_SUBREDDITS';
@@ -61,6 +63,17 @@ export const fetchSubsFailed = error => ({
   error,
 });
 
+export const toggleSpoilerSuccess = thing => ({
+  type: MODTOOLS_TOGGLE_SPOILER_SUCCESS,
+  thing,
+});
+
+export const toggleSpoilerFailure = error => ({
+  type: MODTOOLS_TOGGLE_SPOILER_FAILURE,
+  error,
+  message: 'Sorry, something went wrong when trying to spoiler/unspoiler the post.',
+});
+
 export const remove = (id, spam) => async (dispatch, getState) => {
   const state = getState();
   const apiOptions = apiOptionsFromState(state);
@@ -100,6 +113,27 @@ export const approve = id => async (dispatch, getState) => {
     }
   }
 };
+
+export const toggleSpoiler = id => async(dispatch, getState) => {
+  const state = getState();
+  const apiOptions = apiOptionsFromState(state);
+  const model = modelFromThingId(id, state);
+
+  try{
+    if (model.spoiler) {
+      await Modtools.unspoiler(apiOptions, id);
+    } else {
+      await Modtools.spoiler(apiOptions, id);
+    }
+    dispatch(toggleSpoilerSuccess(model));
+  } catch (e) {
+    if (e instanceof ResponseError) {
+      dispatch(toggleSpoilerFailure(e));
+    } else {
+      throw e;
+    }
+  }
+}
 
 export const fetchModeratingSubreddits = () => async (dispatch, getState) => {
   const state = getState();

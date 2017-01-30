@@ -8,6 +8,7 @@ import * as postActions from 'app/actions/posts';
 import * as postingActions from 'app/actions/posting';
 import * as reportingActions from 'app/actions/reporting';
 import * as mailActions from 'app/actions/mail';
+import * as modToolActions from 'app/actions/modTools';
 import * as votingActions from 'app/actions/vote';
 
 const DEFAULT = {
@@ -23,6 +24,7 @@ export default function(state=DEFAULT, action={}) {
     case replyActions.FAILURE:
     case commentActions.FAILED_UPDATE_BODY:
     case mailActions.FAILED_MESSAGE:
+    case modToolActions.MODTOOLS_TOGGLE_SPOILER_FAILURE:
     case postActions.FAILED_UPDATE_SELF_TEXT:
     case postingActions.FAILURE:
     case postingActions.VALIDATION_FAILURE:

@@ -108,6 +108,7 @@ export default class PostFooter extends React.Component {
         isRemoved={ post.removed }
         isApproved={ post.approved }
         isSpam={ post.spam }
+        isSpoiler={ post.spoiler }
         approvedBy={ post.approvedBy }
         removedBy={ post.bannedBy }
         showModModal={ showModModal }

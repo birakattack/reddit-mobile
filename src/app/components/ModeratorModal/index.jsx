@@ -32,6 +32,12 @@ export class ModeratorModal extends React.Component {
           <div onClick={ this.props.onClick }>
             <div className='ModeratorModalRowWrapper'>
               <DropdownRow
+                icon='header_quarantine'
+                text={ this.props.isSpoiler ? 'Unspoiler' : 'Spoiler' }
+                onClick={ this.props.toggleSpoiler }
+                isSelected={ this.props.isSpoiler }
+              />
+              <DropdownRow
                 icon='delete_remove'
                 text='Remove'
                 onClick={ this.props.onRemove }
@@ -64,6 +70,7 @@ ModeratorModal.propTypes = {
   onSpam: T.func.isRequired,
   onApprove: T.func.isRequired,
   onRemove: T.func.isRequired,
+  toggleSpoiler: T.func.isRequired,
   isApproved: T.bool.isRequired,
   isRemoved: T.bool.isRequired,
   isSpam: T.bool.isRequired,
@@ -75,6 +82,7 @@ const mapDispatchToProps = (dispatch, { id }) => ({
   onSpam: () => dispatch(modActions.remove(id, true)),
   onApprove: () => dispatch(modActions.approve(id)),
   onRemove: () => dispatch(modActions.remove(id, false)),
+  toggleSpoiler: () => dispatch(modActions.toggleSpoiler(id)),
 });
 
 export default connect(null, mapDispatchToProps)(ModeratorModal);
