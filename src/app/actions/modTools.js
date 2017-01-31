@@ -18,6 +18,8 @@ export const MODTOOLS_DISTINGUISH_SUCCESS = 'MODTOOLS_DISTINGUISH_SUCCESS';
 export const MODTOOLS_DISTINGUISH_ERROR = 'MODTOOLS_DISTINGUISH_ERROR';
 export const MODTOOLS_TOGGLE_NSFW_SUCCESS = 'MODTOOLS_TOGGLE_NSFW_SUCCESS';
 export const MODTOOLS_TOGGLE_NSFW_FAILURE = 'MODTOOLS_TOGGLE_NSFW_FAILURE';
+export const MODTOOLS_TOGGLE_SPOILER_SUCCESS = 'MODTOOLS_TOGGLE_SPOILER_SUCCESS';
+export const MODTOOLS_TOGGLE_SPOILER_FAILURE = 'MODTOOLS_TOGGLE_SPOILER_FAILURE';
 export const MODTOOLS_SET_STICKY_COMMENT_SUCCESS = 'MODTOOLS_SET_STICKY_COMMENT_SUCCESS';
 export const MODTOOLS_SET_STICKY_COMMENT_ERROR = 'MODTOOLS_SET_STICKY_COMMENT_ERROR';
 export const FETCHING_MODERATING_SUBREDDITS = 'FETCHING_MODERATING_SUBREDDITS';
@@ -104,6 +106,17 @@ export const receivedSubs = apiResponse => ({
 export const fetchSubsFailed = error => ({
   type: FETCH_FAILED_MODERATING_SUBREDDITS,
   error,
+});
+
+export const toggleSpoilerSuccess = thing => ({
+  type: MODTOOLS_TOGGLE_SPOILER_SUCCESS,
+  thing,
+});
+
+export const toggleSpoilerFailure = error => ({
+  type: MODTOOLS_TOGGLE_SPOILER_FAILURE,
+  error,
+  message: 'Sorry, something went wrong when trying to spoiler/unspoiler the post.',
 });
 
 export const setStickyPostError = (error, isSettingSticky) => ({
@@ -196,6 +209,27 @@ export const toggleNSFW = id => async (dispatch, getState) => {
     }
   }
 };
+
+export const toggleSpoiler = id => async(dispatch, getState) => {
+  const state = getState();
+  const apiOptions = apiOptionsFromState(state);
+  const model = modelFromThingId(id, state);
+
+  try{
+    if (model.spoiler) {
+      await Modtools.unspoiler(apiOptions, id);
+    } else {
+      await Modtools.spoiler(apiOptions, id);
+    }
+    dispatch(toggleSpoilerSuccess(model));
+  } catch (e) {
+    if (e instanceof ResponseError) {
+      dispatch(toggleSpoilerFailure(e));
+    } else {
+      throw e;
+    }
+  }
+}
 
 export const fetchModeratingSubreddits = () => async (dispatch, getState) => {
   const state = getState();
